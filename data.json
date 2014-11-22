@@ -1,0 +1,81 @@
+[
+	{
+		"type": "tag",
+		"id": 1,
+		"name": "Europe"
+	},
+	{
+		"type": "article",
+		"id": 1,
+		"name": "Six British soldiers missing",
+		"tagRefs": [2, 8]
+	},	
+	{
+		"type": "tag",
+		"id": 2,
+		"name": "UK",
+		"tagRefs": [1]
+	},
+	{
+		"type": "tag",
+		"id": 3,
+		"name": "Russia",
+		"tagRefs": [1]
+	},
+	{
+		"type": "tag",
+		"id": 4,
+		"name": "Poland",
+		"tagRefs": [1]
+	},
+	{
+		"type": "article",
+		"id": 2,
+		"name": "Burns hails Scottish fight fans",
+		"tagRefs": [2, 10]
+	},
+	{
+		"type": "article",
+		"id": 3,
+		"name": "Hello Poise",
+		"tagRefs": [11]
+	},
+	{
+		"type": "tag",
+		"id": 5,
+		"name": "Germany",
+		"tagRefs": [1]
+	},
+	{
+		"type": "tag",
+		"id": 6,
+		"name": "News"
+	},
+	{
+		"type": "tag",
+		"id": 7,
+		"name": "Sport"
+	},
+	{
+		"type": "tag",
+		"id": 8,
+		"name": "War"
+	},
+	{
+		"type": "tag",
+		"id": 9,
+		"name": "Football",
+		"tagRefs": [7]
+	},
+	{
+		"type": "tag",
+		"id": 10,
+		"name": "Boxing",
+		"tagRefs": [7]
+	},
+	{
+		"type": "tag",
+		"id": 11,
+		"name": "Culture"
+	}
+]
