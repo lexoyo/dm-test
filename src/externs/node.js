@@ -5,6 +5,11 @@
 function require(name) {}
 
 /**
+ * @type {string}
+ */
+var __dirname;
+
+/**
  * @type {Object}
  */
 var exports = {};

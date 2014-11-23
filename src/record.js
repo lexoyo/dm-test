@@ -1,9 +1,10 @@
 goog.provide('Record');
-goog.provide('Article');
-goog.provide('Tag');
 
 
 /**
+ * This class holds an article or a tag data and has the methods to "resolve" its tags,
+ * which means fill its tags array with Record instances,
+ * accordingly to the ids in its tagRefs attribute
  * @class
  */
 class Record {
@@ -11,17 +12,10 @@ class Record {
    * @constructor
    * @param {number} id
    * @param {string} name
+   * @param {string} type
    * @param {Array.<number>} tagRefs
    */
-  constructor(id, name, tagRefs) {
-    /**
-     * @const
-     */
-    Record.ARTICLE_TYPE = 'article';
-    /**
-     * @const
-     */
-    Record.TAG_TYPE = 'tag';
+  constructor(id, name, type, tagRefs) {
     /**
      * @type {number}
      */
@@ -33,41 +27,37 @@ class Record {
     this.name = name;
 
     /**
+     * @type {string}
+     */
+    this.type = type;
+
+    /**
      * @type {Array.<number>}
      */
     this.tagRefs = tagRefs;
 
     /**
+     * @private
      * @type {Array.<Record>|null}
      * will be null before all its tags have been computed
      */
     this.tags = null;
 
     /**
-     * @type {Object.<Record>}
-     * this is a hash where we store all resolved tags
+     * @type {Object.<Record>} tagsHash is a hash of tags
+     * @static
      */
-    Record.tagsHash = {};
+    Record.tagsHash = Record.tagsHash || {};
   }
 
 
   /**
-   * get / set a tag to / form the hash
-   * @param {string} id
-   * @return {Record} the tag stored in the hash
+   * this populates the static `tagsHash` object
    */
-  static getTag(id) {
-    return Record.tagsHash[id];
+  static storeTag(record) {
+    Record.tagsHash[record.id.toString()] = record;
   }
 
-  /**
-   * get / set a tag to / form the hash
-   * @param {string} id
-   * @param {Record} tag
-   */
-  static setTag(id, tag) {
-    Record.tagsHash[id] = tag;
-  }
 
   /**
    * resolve all tags
@@ -79,51 +69,42 @@ class Record {
       // init the tags object
       this.tags = [];
       // resolve each referenced tag
-      this.tagRefs.forEach(function(id) {
-        this.tag[id.toString()] = Record.getTag(id.toString());
-        // resolve this child tag if needed
-        this.tag[id].resolveTags();
+      this.tagRefs.forEach((id) => {
+        // reference the tag
+        let tag = Record.tagsHash[id.toString()];
+        console.log(tag.name, ' initialized');
+        // add it to the record's tags
+        this.tags.push(tag);
+        // resolve child tags
+        tag.resolveTags();
       });
     }
   }
+
+
+  /**
+   * method used to display Records
+   */
   getTags() {
+    // resolve before use if needed
+    if (!this.tags) this.resolveTags();
+
+    // flatten the hierarchy of tags
     return this.tags.reduce(function(collection, tag){
       return collection.concat(tag, tag.getTags());
     }, []);
   }
+
+
+  /**
+   * method used to display Records
+   */
   toString() {
-    return this.name + ': ' + this.getTags().join(', ');
-  }
-}
-
-/**
- * @class
- * @extends {Record}
- */
-class Article extends Record {
-  /**
-   * @constructor
-   * @param {number} id
-   * @param {string} name
-   * @param {Array.<number>} tagRefs
-   */
-  constructor(id, name, tagRefs) {
-    Record.constructor(id, name, tagRefs);
-  }
-}
-
-/**
- * @class
- * @extends {Record}
- */
-class Tag extends Record {
-  /**
-   * @constructor
-   * @param {number} id
-   * @param {string} name
-   * @param {Array.<number>} tagRefs
-   */
-  constructor(id, name, tagRefs) {
-    Record.constructor(id, name, tagRefs);
+    if (this.type === 'article') {
+      return this.name + ': ' + this.getTags().join(', ');
+    }
+    else {
+      return this.name;
+    }
   }
 }
